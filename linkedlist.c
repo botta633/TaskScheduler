@@ -16,10 +16,9 @@
 // pushing a task to the beginning of the list
 void push(struct Node **head, Task* newtask)
 {
-    struct Node *newnode = malloc(sizeof(struct Node));
-    newnode-> task = newtask;
-    newnode ->next = *head;
-
+    struct Node *new_node = malloc(sizeof(struct Node));
+    new_node->task = newtask;
+    new_node->next = *head;
     *head = newnode;
 }
 

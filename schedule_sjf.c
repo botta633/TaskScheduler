@@ -23,6 +23,10 @@ int cmpfunc(const void *a, const void *b){
 }
 
 
+//TODO-----> THREADS!!
+//PREEMPTION!!
+//Timer
+
 void add(struct Node** head, char* name, int priority, int burst){
 
     Task *newtask = (struct task *)malloc(sizeof(struct task));

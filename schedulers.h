@@ -7,21 +7,15 @@
 
 #ifndef schedulers_h
 #define schedulers_h
+#include "pq.h"
 #define MAX_PRIORITY 10
 #define MIN_PRIORITY 1
-#include "linkedlist.h"
 
+struct scheduler {
+    void (*schedule)(Task *);
+};
 
-void add(struct Node** head, char *name, int priority, int burst); //adding a task 
-
-
-
-void schedule(struct Node* h);
-
-Task* pick_next_task(struct Node *head);
-
-
-
+static pq_t *q;
 
 
 #endif /* schedulers_h */

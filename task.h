@@ -13,7 +13,7 @@ typedef struct task{
     char* name;
     int priority;
     int burst;
-    
+
 } Task;
 
 void print_task(Task *task);
