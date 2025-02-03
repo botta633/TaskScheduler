@@ -6,10 +6,10 @@
 #include <stdatomic.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include "../custom-sched.h"
 typedef struct {
   Task *task;
-  struct scheduler *scheduler;
+  scheduler *scheduler;
 } runnable;
 
 typedef struct Node {

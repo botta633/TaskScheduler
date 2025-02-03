@@ -13,6 +13,7 @@ typedef struct task{
     char* name;
     int priority;
     int burst;
+    long start_time;
 
 } Task;
 

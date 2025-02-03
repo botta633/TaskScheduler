@@ -10,9 +10,9 @@
 
 #include <stdio.h>
 #include "task.h"
+#include "schedulers.h"
 #define QUANTUM 10
 
-// function to simulate the running of tasks
-void run(Task* task, int slice);
+
 
 #endif /* CPU_h */

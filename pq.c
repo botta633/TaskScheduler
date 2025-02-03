@@ -1,31 +1,35 @@
-#include "pq.h"
+#include "queue.h"
+#include "task.h"
 #include <stdio.h>
-// Swap two Task elements
-void swap(Task *a, Task *b) {
-    Task temp = *a;
+#include <pthread.h>
+
+// Swap two Task* elements
+void swap(Task **a, Task **b) {
+    Task *temp = *a;
     *a = *b;
     *b = temp;
 }
-void init_pq(pq_t *q) {
+
+void init_queue(sched_queue_t *q) {
     q->size = 0;
     pthread_mutex_init(&q->mutex, NULL);
 }
+
 // Insert a new task into the priority queue
-void insert(pq_t *q, Task task, int (*cmp)(Task, Task)) {
+void insert(sched_queue_t *q, Task *task, int (*cmp)(const Task *, const Task *)) {
     pthread_mutex_lock(&q->mutex);
     if (q->size == MAX_SIZE) {
-    pthread_mutex_unlock(&q->mutex);
+        pthread_mutex_unlock(&q->mutex);
         return;
     }
     int index = q->size;
     q->tasks[index] = task;
     q->size++;
-    heapify_up(q, index, cmp);
     pthread_mutex_unlock(&q->mutex);
 }
 
 // Heapify up (Bubble up)
-void heapify_up(pq_t *q, int index, int (*cmp)(Task, Task)) {
+void heapify_up(sched_queue_t *q, int index, int (*cmp)(const Task *, const Task *)) {
     int parent = (index - 1) / 2;
     while (index > 0 && cmp(q->tasks[index], q->tasks[parent]) < 0) {
         swap(&q->tasks[index], &q->tasks[parent]);
@@ -35,16 +39,15 @@ void heapify_up(pq_t *q, int index, int (*cmp)(Task, Task)) {
 }
 
 // Extract the minimum element (bubble-down)
-Task extract_min(pq_t *q, int (*cmp)(Task, Task)) {
+Task *extract_min(sched_queue_t *q, int (*cmp)(const Task *, const Task *)) {
     pthread_mutex_lock(&q->mutex);
     if (q->size == 0) {
         printf("Heap underflow!\n");
-        Task empty = {0}; // Assuming Task has a default empty state
-    pthread_mutex_unlock(&q->mutex);
-        return empty;
+        pthread_mutex_unlock(&q->mutex);
+        return NULL; // Return NULL instead of an uninitialized Task*
     }
 
-    Task min = q->tasks[0];  // The root (minimum)
+    Task *min = q->tasks[0]; // The root (minimum)
     
     // Replace root with the last element
     q->tasks[0] = q->tasks[q->size - 1];
@@ -58,7 +61,7 @@ Task extract_min(pq_t *q, int (*cmp)(Task, Task)) {
 }
 
 // Heapify down (Bubble down)
-void heapify_down(pq_t *q, int index, int (*cmp)(Task, Task)) {
+void heapify_down(sched_queue_t *q, int index, int (*cmp)(const Task *, const Task *)) {
     int left = 2 * index + 1;
     int right = 2 * index + 2;
     int smallest = index;
@@ -77,4 +80,11 @@ void heapify_down(pq_t *q, int index, int (*cmp)(Task, Task)) {
         swap(&q->tasks[index], &q->tasks[smallest]);
         heapify_down(q, smallest, cmp);
     }
+}
+
+Task* top(sched_queue_t *q) {
+    pthread_mutex_lock(&q->mutex);
+    Task *temp = q->tasks[0];
+    pthread_mutex_unlock(&q->mutex);
+    return temp;
 }

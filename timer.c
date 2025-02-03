@@ -4,9 +4,10 @@
 #include <stdint.h>
 #include <string.h>
 #include <time.h>
-
+#include <stdatomic.h>
 #ifdef __APPLE__
 #include <dispatch/dispatch.h>
+
 
 void gcd_timer_callback(void *arg) {
     cross_platform_timer_t *t = (cross_platform_timer_t *)arg;
