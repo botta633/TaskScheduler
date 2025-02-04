@@ -8,6 +8,7 @@
 #include "custom-sched.h"
 #include "queue.h"
 #include "task.h"
+#include "timer.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -64,12 +65,15 @@ void init_scheduler() {
   sched_queue_t *queue = malloc(sizeof(sched_queue_t));
 
   priority_rr = malloc(sizeof(scheduler));
+  cross_platform_timer_t *timer =malloc(sizeof(cross_platform_timer_t));
   *priority_rr = (scheduler){
       .schedule = schedule_priority_rr,
       .schedule_preempt = schedule_priority_rr_preempt,
       .queue = queue,
       .run = run_priority_rr,
+      .timer = timer,
   };
 
-  register_scheduler(priority_rr);
+  start_timer(timer, 1, schedule_priority_rr_preempt, NULL);
+
 }
